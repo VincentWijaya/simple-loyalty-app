@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Tiers</h1>
+
+<div id="tiers">
+  <% @tiers.each do |tier| %>
+    <%= render tier %>
+    <p>
+      <%= link_to "Show this tier", tier %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New tier", new_tier_path %>

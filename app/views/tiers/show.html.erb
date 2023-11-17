@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @tier %>
+
+<div>
+  <%= link_to "Edit this tier", edit_tier_path(@tier) %> |
+  <%= link_to "Back to tiers", tiers_path %>
+
+  <%= button_to "Destroy this tier", @tier, method: :delete %>
+</div>
