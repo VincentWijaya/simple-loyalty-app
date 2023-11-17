@@ -22,8 +22,6 @@ class Customer < ApplicationRecord
     total_amount = calculate_total_amount(customer_orders)
     tier_id = find_tier_id(total_amount, tiers)
 
-    puts total_amount
-
     customer.update!(tierId: tier_id)
   end
 
@@ -32,6 +30,8 @@ class Customer < ApplicationRecord
   end
 
   def self.find_tier_id(total_amount, tiers)
-    tiers.find { |_, tier| total_amount > tier.minSpent }&.first || 1
+    tiers.each do |tier|
+      return tier[0] if tier[1].minSpent >= total_amount
+    end
   end
 end
