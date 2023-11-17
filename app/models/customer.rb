@@ -1,5 +1,6 @@
 class Customer < ApplicationRecord
   has_many :order, primary_key: 'customerId', foreign_key: 'customerId'
+  has_one :tier, primary_key: 'tierId', foreign_key: 'id'
 
   def self.update_tier
     customers = Customer.includes(:order).all
@@ -11,26 +12,27 @@ class Customer < ApplicationRecord
     end_date = Time.current.beginning_of_year
 
     customers.each do |customer|
-      update_customer_tier(customer, start_date, end_date, tiers)
+      customer.update_tier(start_date, end_date, tiers)
     end
   end
 
-  def self.update_customer_tier(customer, start_date, end_date, tiers)
-    customer_orders = customer.order.where(date: start_date..end_date)
-    return unless customer_orders.present?
+  def update_tier(start_date, end_date, tiers)
+    customer_orders = self.order.where(date: start_date..end_date)
 
     total_amount = calculate_total_amount(customer_orders)
     tier_id = find_tier_id(total_amount, tiers)
 
-    customer.update!(tierId: tier_id)
+    update!(tierId: tier_id)
   end
 
-  def self.calculate_total_amount(orders)
+  def calculate_total_amount(orders)
+    return 0 unless orders.present?
+
     orders.sum(&:totalInCents) / 100
   end
 
-  def self.find_tier_id(total_amount, tiers)
-    matching_tier = tiers.find { |_, tier| tier.minSpent >= total_amount}
+  def find_tier_id(total_amount, tiers)
+    matching_tier = tiers.find { |_, tier| tier.minSpent >= total_amount }
     matching_tier ? matching_tier.first : 1
   end
 end
