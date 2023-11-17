@@ -5,3 +5,18 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+Tier.create([
+              {
+                name: 'Bronze',
+                minSpent: 0
+              },
+              {
+                name: 'Silver',
+                minSpent: 100
+              },
+              {
+                name: 'Gold',
+                minSpent: 500
+              }
+            ])

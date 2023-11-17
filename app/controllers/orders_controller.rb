@@ -26,6 +26,15 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.save
+        customer = Customer.find_by(customerId: order_params['customerId'])
+        unless customer
+          customer = Customer.new
+          customer.customerId = order_params['customerId']
+          customer.customerName = order_params['customerName']
+          customer.tierId = 1 # Set default tiers for new customer
+          customer.save!
+        end
+
         format.json { render :show, status: :created, location: @order }
       else
         format.json { render json: @order.errors, status: :unprocessable_entity }
