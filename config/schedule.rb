@@ -18,3 +18,7 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+
+every 1.year, at: 'January 1th 00:01pm' do
+  runner 'Customer:update_tier'
+end
