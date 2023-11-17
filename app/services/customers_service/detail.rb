@@ -10,17 +10,21 @@ module CustomersService
       tiers = Tier.all.index_by(&:id)
       customer_tier = customer.find_tier_id(last_year_spent, tiers)
 
-      next_tier_min_spent = tiers.key?(customer_tier + 1) ? tiers[customer_tier + 1]['minSpent'] : 0
-      downgraded_tier = (customer_tier - 1).positive? ? tiers[customer_tier - 1]['name'] : tiers[1]['name']
+      next_tier_min_spent = tiers.key?(customer_tier + 1) ? tiers[customer_tier + 1]['minSpent'] : tiers[tiers.length]['minSpent']
+      next_tier_amount = next_tier_min_spent - last_year_spent
+      puts next_tier_min_spent
+      amount_to_spent_for_next_tier = next_tier_amount.negative? ? 0 : next_tier_amount
+      downgraded_tier_name = (customer_tier - 1).positive? ? tiers[customer_tier - 1]['name'] : tiers[1]['name']
+      downgraded_tier = current_year_spent >= tiers[customer_tier]['minSpent'] ? nil : downgraded_tier_name
 
       {
         current_tier: customer.tier.name,
         start_date: 1.year.ago.beginning_of_year,
         total_spent: last_year_spent,
-        amount_to_spent_for_next_tier: next_tier_min_spent,
+        amount_to_spent_for_next_tier: amount_to_spent_for_next_tier,
         downgraded_tier: downgraded_tier,
         downgraded_date: Time.current.end_of_year,
-        amount_needed_to_maintain_tier: amount_needed_to_maintain_tier(tiers)
+        amount_needed_to_maintain_tier: amount_needed_to_maintain_tier(tiers[customer_tier]['minSpent'])
       }
     rescue ActiveRecord::RecordNotFound
       raise Error, 'Invalid customer'
@@ -37,10 +41,7 @@ module CustomersService
     end
 
     def current_year_spent
-      start_date = Time.current.beginning_of_year
-      end_date = Time.current.end_of_year
-
-      calculate_customer_order(start_date, end_date)
+      @current_year_spent ||= calculate_customer_order(Time.current.beginning_of_year, Time.current.end_of_year)
     end
 
     def calculate_customer_order(start_date, end_date)
@@ -48,15 +49,12 @@ module CustomersService
       customer.calculate_total_amount(customer_orders)
     end
 
-    def amount_needed_to_maintain_tier(tiers)
-      next_tier_id = customer.find_tier_id(last_year_spent, tiers) + 1
+    def amount_needed_to_maintain_tier(current_min_spent)
+      amount_needed = current_min_spent - current_year_spent
 
-      return 0 unless tiers.key?(next_tier_id.to_s)
+      return 0 if amount_needed.negative?
 
-      next_tier_min_spent = tiers[next_tier_id.to_s]['minSpent']
-      difference = next_tier_min_spent - current_year_spent
-
-      difference.positive? ? difference : 0
+      amount_needed
     end
   end
 end
