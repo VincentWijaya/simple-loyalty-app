@@ -30,10 +30,6 @@ class Customer < ApplicationRecord
   end
 
   def self.find_tier_id(total_amount, tiers)
-    # tiers.each do |tier|
-    #   return tier[0] if tier[1].minSpent >= total_amount
-    # end
-
     matching_tier = tiers.find { |_, tier| tier.minSpent >= total_amount}
     matching_tier ? matching_tier.first : 1
   end
