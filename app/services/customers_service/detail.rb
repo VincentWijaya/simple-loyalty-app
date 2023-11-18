@@ -18,7 +18,7 @@ module CustomersService
     private
 
     def customer
-      @customer ||= Customer.find(@customer_id)
+      @customer ||= Customer.find_by!(customerId: @customer_id)
     end
 
     def last_year_spent
