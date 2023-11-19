@@ -42,7 +42,8 @@ class OrdersController < ApplicationController
   end
 
   def fetch_orders
-    Order.where(customerId: @customer_id).paginate(page: @page, per_page: @per_page)
+    Order.where(customerId: @customer_id)
+         .paginate(page: @page, per_page: @per_page)
   end
 
   def orders(collection)
