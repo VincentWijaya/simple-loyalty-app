@@ -29,6 +29,7 @@ class CustomersController < ApplicationController
   def prepare_customer_info_for_html
     @progress_percentage = calculate_progress_percentage(@customer_info[:total_spent])
     @progress_bar_color = determine_progress_bar_color(@customer_info[:current_tier])
+    @tier_milestones = calculate_tier_milestones
     @customer_id = params[:id]
   end
 
@@ -64,5 +65,17 @@ class CustomersController < ApplicationController
     else
       '#000000'
     end
+  end
+
+  def calculate_tier_milestones
+    tiers = Tier.all
+    milestones = []
+
+    tiers.each do |tier|
+      milestone_percentage = (tier[:minSpent].to_f / 500 * 100).to_i
+      milestones << { tier: tier.name, percentage: milestone_percentage }
+    end
+
+    milestones
   end
 end
