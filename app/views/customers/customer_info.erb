@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Information</title>
+  <link rel="stylesheet" href="/styles/customer_info.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Customer Information</h1>
+    <% if flash[:error].present? %>
+      <p class="error-message">Error: <%= flash[:error] %></p>
+    <% else %>
+      <p>Customer ID: <%= @customer_id %></p>
+      <p>Current Tier: <%= @customer_info[:current_tier] %></p>
+      <p>Total Spent: $<%= @customer_info[:total_spent] %></p>
+
+      <div class="progress-bar-container">
+        <p>Progress: <%= @progress_percentage %>%</p>
+        <div class="progress-bar" style="height: 15px; width: <%= @progress_percentage %>%; background-color: <%= @progress_bar_color %>;"></div>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>

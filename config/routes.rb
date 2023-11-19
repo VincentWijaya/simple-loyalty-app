@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
-  resources :tiers
-  resources :customers
   resources :orders
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get '/customers/:id', to: 'customers#show', as: 'customer'
+  get '/customers/:id/order_history', to: 'customers#order_history', as: 'order_history'
 end
