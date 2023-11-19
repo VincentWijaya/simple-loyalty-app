@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   def index
     @customer_id = params[:customer_id]
     @page = params[:page].to_i || 1
-    @per_page = params[:per_page].to_i || 10
+    @per_page = params[:per_page].to_i || 5
 
     render json: orders(fetch_orders), status: :ok
   rescue ActiveRecord::RecordNotFound
@@ -19,7 +19,7 @@ class OrdersController < ApplicationController
         customer = Customer.find_by(customerId: order_params['customerId'])
         find_or_create_customer unless customer
 
-        format.json { render :show, status: :created, location: @order }
+        format.json { render json: @order, status: :created}
       else
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end

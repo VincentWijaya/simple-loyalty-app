@@ -1,0 +1,28 @@
+<div>
+  <h1>Order History</h1>
+
+  <% if @order_history.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Total In Cents</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @order_history.each do |order| %>
+          <tr>
+            <td><%= order.orderId %></td>
+            <td><%= order.totalInCents %></td>
+            <td><%= order.date.strftime('%Y-%m-%d %H:%M:%S') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= will_paginate @order_history %>
+  <% else %>
+    <p>No orders found.</p>
+  <% end %>
+</div>

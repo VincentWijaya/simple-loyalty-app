@@ -1,5 +1,6 @@
 class CustomersController < ApplicationController
   before_action :load_customer_info, only: [:show]
+  before_action :load_order_history, only: [:order_history]
   MAX_TIER_SPENT = 500
 
   def show
@@ -11,10 +12,17 @@ class CustomersController < ApplicationController
     handle_error(e, 'Customer information not available.')
   end
 
+  def order_history
+    respond_to do |format|
+      format.html { @order_history }
+      format.json { render json: orders(@order_history) }
+    end
+  end
+
   private
 
   def load_customer_info
-    @customer_info = CustomersService::Detail.call(customer_id: params[:id])
+    @customer_info = CustomersService::Detail.call(customerId: params[:id])
   end
 
   def handle_html_response
@@ -69,5 +77,23 @@ class CustomersController < ApplicationController
   def render_error_html(message)
     flash.now[:error] = message
     render 'customer_info'
+  end
+
+  def load_order_history
+    per_page = params[:per_page].to_i | 5
+    @order_history = Order.where(customerId: params[:id])
+                          .paginate(page: params[:page], per_page: per_page)
+  end
+
+  def orders(collection)
+    @order_data = {
+      data: collection,
+      total_pages: collection.total_pages,
+      total_count: collection.total_entries,
+      current_page: collection.current_page,
+      next_page: collection.next_page,
+      prev_page: collection.previous_page,
+      per_page: collection.per_page
+    }
   end
 end
