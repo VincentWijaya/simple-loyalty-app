@@ -19,7 +19,7 @@ class OrdersController < ApplicationController
         customer = Customer.find_by(customerId: order_params['customerId'])
         find_or_create_customer unless customer
 
-        format.json { render json: @order, status: :created}
+        format.json { render json: @order, status: :created }
       else
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
