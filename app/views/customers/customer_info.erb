@@ -18,7 +18,11 @@
 
       <div class="progress-bar-container">
         <p><b>Current Progress:</b></p>
-        <p>You're $<%= @customer_info[:amount_to_spent_for_next_tier] %> away from <b><%= @customer_info[:next_tier] %></b>. To keep your current tier, spent $<%= @customer_info[:amount_needed_to_maintain_tier] %> before <b><%= @customer_info[:downgraded_date] %></b></p>
+        <% if @customer_info[:current_tier] != 'Gold' %>
+          <p>You're $<%= @customer_info[:amount_to_spent_for_next_tier] %> away from <b><%= @customer_info[:next_tier] %></b>. To keep your current tier, spent $<%= @customer_info[:amount_needed_to_maintain_tier] %> before <b><%= @customer_info[:downgraded_date] %></b></p>
+        <% else %>
+          <p>Congratulation! You already <b>Gold</b>. Keep it up by spent $<%= @customer_info[:amount_needed_to_maintain_tier] %> before <b><%= @customer_info[:downgraded_date] %></b></p>
+        <% end %>
         <div class="progress-bar" style="height: 15px; width: <%= @progress_percentage %>%; background-color: <%= @progress_bar_color %>;"></div>
       </div>
     <% end %>
