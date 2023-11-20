@@ -22,7 +22,7 @@ class CustomersController < ApplicationController
   private
 
   def load_customer_info
-    @customer_info = CustomersService::Detail.call(customerId: params[:id])
+    @customer_info = CustomersService::Detail.call(customer_id: params[:id])
   end
 
   def handle_html_response
@@ -42,7 +42,6 @@ class CustomersController < ApplicationController
   def prepare_customer_info_for_html
     @progress_percentage = calculate_progress_percentage(@customer_info[:total_spent])
     @progress_bar_color = determine_progress_bar_color(@customer_info[:current_tier])
-    @tier_milestones = calculate_tier_milestones
     @customer_id = params[:id]
   end
 
@@ -57,14 +56,6 @@ class CustomersController < ApplicationController
     when 'Gold' then '#ffd700'
     else '#000000'
     end
-  end
-
-  def calculate_tier_milestones
-    Tier.all.map { |tier| { tier: tier.name, percentage: calculate_milestone_percentage(tier.minSpent) } }
-  end
-
-  def calculate_milestone_percentage(min_spent)
-    (min_spent.to_f / MAX_TIER_SPENT * 100).to_i
   end
 
   def handle_error(exception, message)

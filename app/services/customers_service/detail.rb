@@ -53,6 +53,10 @@ module CustomersService
       current_year_spent >= tiers[customer_tier]['minSpent'] ? nil : downgraded_tier_name
     end
 
+    def determine_next_tier(tiers, customer_tier)
+      (customer_tier + 1) < tiers.length ? tiers[customer_tier + 1]['name'] : tiers[3]['name']
+    end
+
     def build_response(tiers, customer_tier)
       {
         current_tier: customer.tier.name,
@@ -61,7 +65,8 @@ module CustomersService
         amount_to_spent_for_next_tier: amount_to_spent_for_next_tier(tiers, customer_tier),
         downgraded_tier: determine_downgraded_tier(tiers, customer_tier),
         downgraded_date: Time.current.end_of_year,
-        amount_needed_to_maintain_tier: amount_needed_to_maintain_tier(tiers[customer_tier]['minSpent'])
+        amount_needed_to_maintain_tier: amount_needed_to_maintain_tier(tiers[customer_tier]['minSpent']),
+        next_tier: determine_next_tier(tiers, customer_tier)
       }
     end
   end

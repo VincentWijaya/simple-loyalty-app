@@ -12,14 +12,14 @@
     <% if flash[:error].present? %>
       <p class="error-message">Error: <%= flash[:error] %></p>
     <% else %>
-      <p>Customer ID: <%= @customer_id %></p>
-      <p>Current Tier: <%= @customer_info[:current_tier] %></p>
-      <p>Total Spent: $<%= @customer_info[:total_spent] %></p>
+      <p><b>Customer ID:</b> <%= @customer_id %></p>
+      <p><b>Current Tier:</b> <%= @customer_info[:current_tier] %></p>
+      <p><b>Total Spent:</b> $<%= @customer_info[:total_spent] %></p>
 
       <div class="progress-bar-container">
-        <p>Progress: <%= @progress_percentage %>%</p>
-        <div class="progress-bar" style="height: 15px; width: <%= @progress_percentage %>%; background-color: <%= @progress_bar_color %>;">
-        </div>
+        <p><b>Current Progress:</b></p>
+        <p>You're $<%= @customer_info[:amount_to_spent_for_next_tier] %> away from <b><%= @customer_info[:next_tier] %></b>. To keep your current tier, spent $<%= @customer_info[:amount_needed_to_maintain_tier] %> before <b><%= @customer_info[:downgraded_date] %></b></p>
+        <div class="progress-bar" style="height: 15px; width: <%= @progress_percentage %>%; background-color: <%= @progress_bar_color %>;"></div>
       </div>
     <% end %>
   </div>
