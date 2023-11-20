@@ -28,3 +28,25 @@ You can start the rails server using the command given below.
 ```ruby
 rails s
 ```
+
+#### API List
+##### 1. Create Order
+```curl
+curl --location 'localhost:3000/orders' \
+--header 'Content-Type: application/json' \
+--data '{
+    "customerId": "123",
+    "customerName": "Taro Suzuki",
+    "orderId": "T123",
+    "totalInCents": 5000,
+    "date": "2022-12-04T05:29:59.850Z"
+}'
+```
+##### 2. Get customer detail
+```curl
+curl --location 'localhost:3000/customers/123.json'
+```
+##### 3. Get all customer order
+```curl
+curl --location 'localhost:3000/orders.json?customer_id=123&page=1&per_page=10'
+```
