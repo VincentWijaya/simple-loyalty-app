@@ -1,7 +1,8 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Customer, type: :model do
-  describe '#update_tier' do
+  context '#update_tier' do
     let(:customer) { create(:customer, tierId: 1, customerId: '123') }
     let!(:tiers) do
       [
@@ -11,20 +12,37 @@ RSpec.describe Customer, type: :model do
       ].each { |tier| create(:tier, tier) }
     end
 
-    before do
-      create_list(:order, 3, customerName: 'John', customerId: customer.customerId, totalInCents: 5_000, date: 1.year.ago)
+    describe 'when have correct order' do
+      before do
+        create_list(:order, 3, customerName: 'John', customerId: customer.customerId, totalInCents: 5_000, date: 1.year.ago)
+      end
+
+      it 'updates the tier correctly' do
+        tiers_data = Tier.all.index_by(&:id)
+        start_date = 1.year.ago.beginning_of_year
+        end_date = Time.current.beginning_of_year
+
+        customer.update_tier(start_date, end_date, tiers_data)
+
+        customer.reload
+
+        expect(customer.tierId).to eq(2)
+      end
     end
 
-    it 'updates the tier correctly' do
-      tiers_data = Tier.all.index_by(&:id)
-      start_date = 1.year.ago.beginning_of_year
-      end_date = Time.current.beginning_of_year
+    describe 'when dont have order' do
+      it 'updates the tier correctly' do
+        tiers_data = Tier.all.index_by(&:id)
+        start_date = 1.year.ago.beginning_of_year
+        end_date = Time.current.beginning_of_year
 
-      customer.update_tier(start_date, end_date, tiers_data)
+        customer.update_tier(start_date, end_date, tiers_data)
 
-      customer.reload
+        customer.reload
 
-      expect(customer.tierId).to eq(2)
+        expect(customer.tierId).to eq(1)
+      end
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
