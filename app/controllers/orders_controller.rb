@@ -34,7 +34,6 @@ class OrdersController < ApplicationController
 
   def find_or_create_customer
     customer = Customer.new
-    puts customer.to_json
     customer.customerId = order_params['customerId']
     customer.customerName = order_params['customerName']
     customer.tierId = 1 # Set default tiers for new customer
