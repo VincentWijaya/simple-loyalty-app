@@ -29,6 +29,10 @@ You can start the rails server using the command given below.
 rails s
 ```
 
+#### Web page URL
+1. Get customer detail http://localhost:3000/customers/123
+2. Get customer order history http://localhost:3000/customers/123/order_history
+
 #### API List
 ##### 1. Create Order
 ```curl
