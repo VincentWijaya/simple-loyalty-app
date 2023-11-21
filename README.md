@@ -29,6 +29,9 @@ You can start the rails server using the command given below.
 rails s
 ```
 
+#### Updating tier
+To perform update tier for all user you can run ```Customer.update_tier``` in rails console. Beside that, I already create a cron that will run once a year at January 1th 00:01pm
+
 #### Web page URL
 1. Get customer detail http://localhost:3000/customers/123
 2. Get customer order history http://localhost:3000/customers/123/order_history
